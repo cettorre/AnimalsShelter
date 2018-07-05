@@ -22,10 +22,11 @@ public class Controller {
      animalList.add(animal);
     }
 
-    public List<Animal> getAnimalListDTO() {
+    public List<AnimalDTO> getAnimalListDTO() {
         List<AnimalDTO> animalDTOList= new ArrayList<>();
-
-
-        return null;
+        for(int i=0;i<animalList.size();i++){
+            animalDTOList.add(animalDTOList.get(i));
+        }
+        return animalDTOList;
     }
 }
