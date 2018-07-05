@@ -1,8 +1,9 @@
-package com.example.cettorre.animalsshelter;
+package com.example.cettorre.animalsshelter.view;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.example.cettorre.animalsshelter.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,8 +40,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng latlng = new LatLng(41.38, 2.16);//TODO getAnimalLocation from DB
+        mMap.addMarker(new MarkerOptions().position(latlng).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
     }
 }
