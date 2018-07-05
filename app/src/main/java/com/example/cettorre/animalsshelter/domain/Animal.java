@@ -8,40 +8,59 @@ public class Animal {
     private String type;
     private  int age;
     private Date date;
+    private boolean hasChip;
     private String photoB64;
     private float latitude;
     private float longitude;
+
+    public boolean isHasChip() {
+        return hasChip;
+    }
+
+    public void setHasChip(boolean hasChip) {
+        this.hasChip = hasChip;
+    }
 
     public Animal(String name, String type) {
         this.name = name;
         this.type = type;
     }
 
-    public Animal(String name, int age, String type) {
+    public Animal(String name, String type, int age) {
         this.name = name;
-        this.age = age;
         this.type = type;
+        this.age = age;
     }
 
-    public Animal(String name, int age, String type, Date date) {
+    public Animal(String name, String type,int age, boolean hasChip) {
+        this.name = name;
+        this.type = type;
+        this.age = age;
+        this.hasChip=hasChip;
+    }
+
+    public Animal(String name, String type, int age, boolean hasChip,  Date date) {
         this.name = name;
         this.age = age;
         this.type = type;
+        this.hasChip=hasChip;
         this.date = date;
     }
 
-    public Animal(String name, int age, String type, Date date, String photoB64) {
+    public Animal(String name, String type ,int age, boolean hasChip, Date date, String photoB64) {
         this.name = name;
         this.age = age;
         this.type = type;
+        this.hasChip=hasChip;
         this.date = date;
         this.photoB64 = photoB64;
     }
 
-    public Animal(String name,String type,int age, Date date, String photoB64, float latitude, float longitude) {
+    public Animal(String name,String type,int age, boolean hasChip, Date date, String photoB64, float latitude, float longitude) {
         this.name = name;
         this.type = type;
         this.age = age;
+        this.hasChip=hasChip;
         this.date = date;
         this.photoB64 = photoB64;
         this.latitude = latitude;
@@ -102,5 +121,18 @@ public class Animal {
 
     public void setLongitude(float longitude) {
         this.longitude = longitude;
+    }
+
+    @Override
+    public String toString() {
+        return "Animal{" +
+                "name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", age=" + age +
+                ", date=" + date +
+                ", photoB64='" + photoB64 + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 }
