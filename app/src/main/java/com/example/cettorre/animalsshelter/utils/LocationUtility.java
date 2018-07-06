@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -22,6 +23,8 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+
+        //TODO check permissions testing from MainActivity onRequestPermissionsResult
         // If we're running on API 23 or above, we need to ask permission at runtime
   /*      int permCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         if (permCheck != PackageManager.PERMISSION_GRANTED) {
@@ -32,6 +35,10 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
             setLocationFields(locData);
         }
 */
+        //TODO check if null
+        Location locData = getLocation();
+        Log.e("location",String.valueOf(locData.getLatitude()));
+
     }
 
     @Override
@@ -50,5 +57,25 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+    }
+
+    public void connectGoogleApiClient(){
+        mGoogleApiClient.connect();
+    }
+
+    public void disconnectApiClient(){
+        if (mGoogleApiClient.isConnected()){
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    public Location getLocation() {
+        try {
+            Location loc = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            return loc;
+        }
+        catch (SecurityException e) {
+            return null;
+        }
     }
 }
