@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.cettorre.animalsshelter.R;
 import com.example.cettorre.animalsshelter.application.Controller;
@@ -29,6 +30,7 @@ public class InsertAnimalActivity extends AppCompatActivity {
     EditText age;
     EditText type;
     CheckBox hasChip;
+    TextView locationTv;
     int iChip;
 
     Button sendData;
@@ -62,6 +64,8 @@ public class InsertAnimalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 locationUtility.startLocationUpdates(getApplicationContext());
+                locationTv.setText(String.valueOf(locationUtility.mCurLocation.getLatitude()));
+
             }
         });
     }
@@ -97,6 +101,7 @@ public class InsertAnimalActivity extends AppCompatActivity {
                 //TODO test on above api 23 if this works
                 //TODO when null ask user to start GPS sensor and get current Location
                 //TODO check if is current location and not LastKnownLocation
+
             }
         }
     }
@@ -123,6 +128,7 @@ public class InsertAnimalActivity extends AppCompatActivity {
         takePhoto=findViewById(R.id.takePhoto);
         mImageView=findViewById(R.id.photo);
         startLocation=findViewById(R.id.startLocation);
+        locationTv=findViewById(R.id.current_location);
     }
 
 }

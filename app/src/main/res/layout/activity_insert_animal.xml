@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="name"
-        android:layout_marginTop="80dp"/>
+        android:layout_marginTop="20dp"/>
 
     <EditText
         android:id="@+id/age"
@@ -32,6 +32,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="chip" />
+    <TextView
+        android:id="@+id/current_location"
+        android:text="location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/takePhoto"
@@ -43,16 +48,15 @@
     <ImageView
         android:id="@+id/photo"
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="170dp"
         android:layout_gravity="center"/>
 
     <Button
         android:id="@+id/startLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="start location"
-        android:background="@color/colorAccent"
-        android:layout_margin="15dp"
+        android:text="capture current location"
+        android:layout_margin="5dp"
         />
     <Button
         android:id="@+id/sendData"
@@ -60,7 +64,7 @@
         android:layout_height="wrap_content"
         android:text="Add New Animal"
         android:background="@color/colorAccent"
-        android:layout_margin="15dp"
+        android:layout_margin="5dp"
         />
 
 </LinearLayout>

@@ -25,7 +25,7 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
     private final long LOC_FASTEST_UPDATE = 5000; // 5s in milliseconds
     protected static GoogleApiClient mGoogleApiClient;
     protected static LocationRequest mLocRequest;
-    protected static Location mCurLocation;
+    public static Location mCurLocation;
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -93,6 +93,8 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
 
     @Override
     public void onLocationChanged(Location location) {
+        mCurLocation = location;
+        Log.e("location change", String.valueOf(location.getLatitude()));
 
     }
 
