@@ -26,14 +26,12 @@ public class MainActivity extends AppCompatActivity {
 
     Button mAddAnimal;
     ListView mList;
-    LocationUtility locationUtility=new LocationUtility();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initComponents();
-        locationUtility.connectToGooglePlay(getApplicationContext());
 
         mAddAnimal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,40 +51,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    Location locData;
-    @Override
-    public void onRequestPermissionsResult(int reqCode, String[] perms, int[] results){
-
-        if (reqCode == 1) {
-            if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) {
-                 locData = locationUtility.getLocation();
-                //todo check if null
-                Log.e("location",String.valueOf(locData.getLatitude()));
-
-            }else{
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
-                //todo check if null
-                Log.e("locationPermReq",String.valueOf(locData.getLatitude()));
-                //TODO test on above api 23 if this works
-                //TODO when null ask user to start GPS sensor and get current Location
-            }
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        locationUtility.connectGoogleApiClient();//
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-   locationUtility.disconnectApiClient();
-    }
-
-    public void initComponents(){
+       public void initComponents(){
         mAddAnimal= (Button) findViewById(R.id.addAnimal);
         mList = (ListView) findViewById(R.id.list);
     }
