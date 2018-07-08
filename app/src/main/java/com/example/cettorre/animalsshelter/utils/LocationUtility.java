@@ -1,7 +1,9 @@
 package com.example.cettorre.animalsshelter.utils;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -12,11 +14,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.example.cettorre.animalsshelter.view.InsertAnimalActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 
 public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -26,6 +35,7 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
     protected static GoogleApiClient mGoogleApiClient;
     protected static LocationRequest mLocRequest;
     public static Location mCurLocation;
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -70,6 +80,8 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
         mLocRequest.setInterval(LOC_UPDATE_INTERVAL);
         mLocRequest.setFastestInterval(LOC_FASTEST_UPDATE);
         mLocRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+
     }
 
     public void connectGoogleApiClient() {
@@ -130,6 +142,60 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
         // TODO: stop the updates
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient,this);
 
+
+    }
+
+    public void checkIfGPSisEnabled(final Activity activity) {
+
+        //Check if GPS is enabled
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocRequest);
+
+        //**************************
+        builder.setAlwaysShow(true); //this is the key ingredient
+        //**************************
+
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(@NonNull LocationSettingsResult result) {
+                final Status status = result.getStatus();
+//                final LocationSettingsStates state = result.getLocationSettingsStates();
+
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+
+
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the user
+                        // a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(activity
+                                    , 1000);
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        break;
+                }
+            }
+        });
+
+
+
+
+
+
+
+    }
+
+    public void requestAccessFineLocationPermission(Activity activity) {
+        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
     }
 }

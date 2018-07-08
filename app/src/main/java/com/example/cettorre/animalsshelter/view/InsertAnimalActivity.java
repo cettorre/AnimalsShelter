@@ -1,10 +1,8 @@
 package com.example.cettorre.animalsshelter.view;
 
-import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,6 +47,8 @@ public class InsertAnimalActivity extends AppCompatActivity {
         initComponents();
         locationUtility.connectToGooglePlay(getApplicationContext());
         locationUtility.createLocationRequest();
+        locationUtility.checkIfGPSisEnabled(InsertAnimalActivity.this);
+
 
         sendData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,24 +83,23 @@ public class InsertAnimalActivity extends AppCompatActivity {
         locationUtility.disconnectApiClient();
     }
 
-    Location locData;
+    //TODO test on above api 23
+   // Location locData;//locationUtility.mCurLocation
     @Override
     public void onRequestPermissionsResult(int reqCode, String[] perms, int[] results){
 
         if (reqCode == 1) {
             if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) {
-                locData = locationUtility.getLocation();
-                //todo check if null
-                Log.e("location",String.valueOf(locData.getLatitude()));
+                locationUtility.mCurLocation = locationUtility.getLocation();
+
+                if(locationUtility.mCurLocation!=null)
+                    Log.e("location_from_perm_res",String.valueOf(locationUtility.mCurLocation.getLatitude()));
 
             }else{
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                locationUtility.requestAccessFineLocationPermission(this);
 
-                //todo check if null
-                Log.e("locationPermReq",String.valueOf(locData.getLatitude()));
-                //TODO test on above api 23 if this works
-                //TODO when null ask user to start GPS sensor and get current Location
-                //TODO check if is current location and not LastKnownLocation
+                if(locationUtility.mCurLocation!=null)
+                     Log.e("locationPermReq",String.valueOf(locationUtility.mCurLocation.getLatitude()));
 
             }
         }
