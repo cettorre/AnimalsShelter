@@ -11,8 +11,8 @@ public class AnimalDTO {
     private boolean hasChip;
     private Date date;
     private String photoB64;
-    private float latitude;
-    private float longitude;
+    private double latitude;
+    private double longitude;
 
     public AnimalDTO(Animal animal) {
         this.name = animal.getName();

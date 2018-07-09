@@ -19,8 +19,8 @@ public class Controller {
          boolean hasChip,
          Date date,
          String photoB64,
-         float latitude,
-         float longitude){
+         double latitude,
+         double longitude) throws Exception {
      Animal animal=new Animal(name,type,age,hasChip,date,photoB64,latitude,longitude);
      animalList.add(animal);
      Log.e("created_animal",animal.toString());

@@ -116,7 +116,6 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
     }
 
     public void startLocationUpdates(Context context) throws NullPointerException{
-        // TODO: start the location updates
         if (ActivityCompat.checkSelfPermission(
                 context, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED

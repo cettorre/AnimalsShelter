@@ -1,9 +1,12 @@
 package com.example.cettorre.animalsshelter.view;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,8 +22,11 @@ import android.widget.Toast;
 import com.example.cettorre.animalsshelter.R;
 import com.example.cettorre.animalsshelter.application.Controller;
 import com.example.cettorre.animalsshelter.application.dto.AnimalDTO;
+import com.example.cettorre.animalsshelter.persistence.DbHelper;
 import com.example.cettorre.animalsshelter.utils.LocationUtility;
+import com.example.cettorre.animalsshelter.utils.Utils;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +48,7 @@ public class InsertAnimalActivity extends AppCompatActivity {
     Uri photoUri = null;
     Controller controller=new Controller();
     static LocationUtility locationUtility=new LocationUtility();
+    Utils utils=new Utils();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +66,7 @@ public class InsertAnimalActivity extends AppCompatActivity {
                 try {
                     addAniimalToController();
                 } catch (Exception e) {
-                    Toast t = Toast.makeText(InsertAnimalActivity.this, "Please insert correct values into form", Toast.LENGTH_LONG);
+                    Toast t = Toast.makeText(InsertAnimalActivity.this, "Please insert correct values into form: "+e.getMessage(), Toast.LENGTH_LONG);
                     t.show();
                 }
                 List<AnimalDTO> list= controller.getAnimalListDTO();
@@ -78,6 +85,15 @@ public class InsertAnimalActivity extends AppCompatActivity {
                     t.show();
                 }
 
+            }
+        });
+
+        takePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                utils.dispatchTakePictureIntent(takePictureIntent,getPackageManager(),getExternalFilesDir(Environment.DIRECTORY_PICTURES),InsertAnimalActivity.this,photoUri);
+                startActivityForResult(takePictureIntent, 1);
             }
         });
     }
@@ -122,12 +138,23 @@ public class InsertAnimalActivity extends AppCompatActivity {
                 name.getText().toString(),
                 type.getText().toString(),
                 Integer.parseInt(age.getText().toString()),
-                false,
+                hasChip.isChecked(),
                 new Date(),
                 "photoB64",
-                23,
-                18);
+                 locationUtility.mCurLocation.getLatitude(),
+                 locationUtility.mCurLocation.getLongitude());
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+
+            mImageView.setImageURI(photoUri);
+            String encodedImage=  Utils.convertToBase64(Utils.mCurrentPhotoPath);//static!
+            Log.e("encoded_image1",encodedImage);
+        }
+    }
+
 
     private void initComponents() {
         setContentView(R.layout.activity_insert_animal);
@@ -141,5 +168,7 @@ public class InsertAnimalActivity extends AppCompatActivity {
         startLocation=findViewById(R.id.startLocation);
         locationTv=findViewById(R.id.current_location);
     }
+
+
 
 }

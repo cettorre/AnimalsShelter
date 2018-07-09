@@ -10,8 +10,8 @@ public class Animal {
     private Date date;
     private boolean hasChip;
     private String photoB64;
-    private float latitude;
-    private float longitude;
+    private double latitude;
+    private double longitude;
 
     public boolean isHasChip() {
         return hasChip;
@@ -21,44 +21,12 @@ public class Animal {
         this.hasChip = hasChip;
     }
 
-    public Animal(String name, String type) {
+    public Animal(String name,String type,int age, boolean hasChip, Date date, String photoB64, double latitude, double longitude) throws Exception {
+        if(name.length()<2)throw new Exception("Animal name cannot be < than 2");
         this.name = name;
+        if(type.length()<2)throw new Exception("Animal type cannot be < than 2");
         this.type = type;
-    }
-
-    public Animal(String name, String type, int age) {
-        this.name = name;
-        this.type = type;
-        this.age = age;
-    }
-
-    public Animal(String name, String type,int age, boolean hasChip) {
-        this.name = name;
-        this.type = type;
-        this.age = age;
-        this.hasChip=hasChip;
-    }
-
-    public Animal(String name, String type, int age, boolean hasChip,  Date date) {
-        this.name = name;
-        this.age = age;
-        this.type = type;
-        this.hasChip=hasChip;
-        this.date = date;
-    }
-
-    public Animal(String name, String type ,int age, boolean hasChip, Date date, String photoB64) {
-        this.name = name;
-        this.age = age;
-        this.type = type;
-        this.hasChip=hasChip;
-        this.date = date;
-        this.photoB64 = photoB64;
-    }
-
-    public Animal(String name,String type,int age, boolean hasChip, Date date, String photoB64, float latitude, float longitude) {
-        this.name = name;
-        this.type = type;
+        if(age<0)throw new Exception("Animal name cannot be negative");
         this.age = age;
         this.hasChip=hasChip;
         this.date = date;
@@ -107,7 +75,7 @@ public class Animal {
         this.photoB64 = photoB64;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
@@ -115,7 +83,7 @@ public class Animal {
         this.latitude = latitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
