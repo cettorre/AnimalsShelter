@@ -1,8 +1,10 @@
 package com.example.cettorre.animalsshelter.view;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cettorre.animalsshelter.R;
 import com.example.cettorre.animalsshelter.application.Controller;
@@ -46,15 +49,19 @@ public class InsertAnimalActivity extends AppCompatActivity {
 
         initComponents();
         locationUtility.connectToGooglePlay(getApplicationContext());
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         locationUtility.createLocationRequest();
         locationUtility.checkIfGPSisEnabled(InsertAnimalActivity.this);
-
 
         sendData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                addAniimalToController();
+                try {
+                    addAniimalToController();
+                } catch (Exception e) {
+                    Toast t = Toast.makeText(InsertAnimalActivity.this, "Please insert correct values into form", Toast.LENGTH_LONG);
+                    t.show();
+                }
                 List<AnimalDTO> list= controller.getAnimalListDTO();
                 Log.e("list",list.toString());
                 }
@@ -63,8 +70,13 @@ public class InsertAnimalActivity extends AppCompatActivity {
         startLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                locationUtility.startLocationUpdates(getApplicationContext());
-                locationTv.setText(String.valueOf(locationUtility.mCurLocation.getLatitude()));
+                try {
+                    locationUtility.startLocationUpdates(getApplicationContext());
+                        locationTv.setText("Latitude: "+String.valueOf(locationUtility.mCurLocation.getLatitude())+" Longitude: "+locationUtility.mCurLocation.getLongitude());
+                }catch (NullPointerException e){
+                    Toast t= Toast.makeText(InsertAnimalActivity.this,"Wait a second location is not yet ready. Try again",Toast.LENGTH_LONG);
+                    t.show();
+                }
 
             }
         });
@@ -105,7 +117,7 @@ public class InsertAnimalActivity extends AppCompatActivity {
         }
     }
 
-    private void addAniimalToController() {
+    private void addAniimalToController() throws Exception {
          controller.addAnimal(
                 name.getText().toString(),
                 type.getText().toString(),

@@ -105,12 +105,17 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
 
     @Override
     public void onLocationChanged(Location location) {
+        if(location!=null){
         mCurLocation = location;
+        }else {
+            Log.e("onLocationChanged","wait location update is not ready");
+        }
+
         Log.e("location change", String.valueOf(location.getLatitude()));
 
     }
 
-    public void startLocationUpdates(Context context) {
+    public void startLocationUpdates(Context context) throws NullPointerException{
         // TODO: start the location updates
         if (ActivityCompat.checkSelfPermission(
                 context, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -131,8 +136,10 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
                 (mGoogleApiClient, mLocRequest, this);
 
         //todo check if null and if google play services is connected-> request activate GPS
+
         mCurLocation=getLocation();
-        Log.e("cur loc",String.valueOf(mCurLocation.getLatitude()));
+
+
 
 
         // give the location list a slight green tint so we know we're listening
