@@ -3,8 +3,6 @@ package com.example.cettorre.animalsshelter.view;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -18,15 +16,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.cettorre.animalsshelter.R;
 import com.example.cettorre.animalsshelter.application.Controller;
 import com.example.cettorre.animalsshelter.application.dto.AnimalDTO;
-import com.example.cettorre.animalsshelter.persistence.DbHelper;
 import com.example.cettorre.animalsshelter.utils.LocationUtility;
 import com.example.cettorre.animalsshelter.utils.Utils;
-
-import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +39,6 @@ public class InsertAnimalActivity extends AppCompatActivity {
     Button startLocation;
 
     ImageView mImageView ;
-    Uri photoUri = null;
     Controller controller=new Controller();
     static LocationUtility locationUtility=new LocationUtility();
     Utils utils=new Utils();
@@ -92,9 +85,9 @@ public class InsertAnimalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                utils.dispatchTakePictureIntent(takePictureIntent,getPackageManager(),getExternalFilesDir(Environment.DIRECTORY_PICTURES),InsertAnimalActivity.this,photoUri);
+                utils.dispatchTakePictureIntent(takePictureIntent,getPackageManager(),getExternalFilesDir(Environment.DIRECTORY_PICTURES),InsertAnimalActivity.this);
                 startActivityForResult(takePictureIntent, 1);
-            }
+                }
         });
     }
 
@@ -149,8 +142,8 @@ public class InsertAnimalActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
 
-            mImageView.setImageURI(photoUri);
-            String encodedImage=  Utils.convertToBase64(Utils.mCurrentPhotoPath);//static!
+            mImageView.setImageURI(utils.photoUri);
+            String encodedImage=  utils.convertToBase64(utils.mCurrentPhotoPath);
             Log.e("encoded_image1",encodedImage);
         }
     }
@@ -168,7 +161,6 @@ public class InsertAnimalActivity extends AppCompatActivity {
         startLocation=findViewById(R.id.startLocation);
         locationTv=findViewById(R.id.current_location);
     }
-
 
 
 }
