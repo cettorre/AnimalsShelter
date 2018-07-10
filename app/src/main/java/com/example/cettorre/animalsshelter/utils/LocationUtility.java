@@ -36,6 +36,9 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
     protected static LocationRequest mLocRequest;
     public static Location mCurLocation;
 
+    public static void setmCurLocation(Location mCurLocation) {
+        LocationUtility.mCurLocation = mCurLocation;
+    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {

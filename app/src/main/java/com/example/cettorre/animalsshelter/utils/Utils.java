@@ -81,6 +81,11 @@ public class Utils {
         return encodedImage;
     }
 
+    public String getEncodedImage(){
+
+        return convertToBase64(mCurrentPhotoPath);
+    }
+
 
 
 }

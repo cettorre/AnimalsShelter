@@ -1,7 +1,6 @@
 package com.example.cettorre.animalsshelter.view;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -20,12 +19,6 @@ import android.widget.Toast;
 import com.example.cettorre.animalsshelter.R;
 import com.example.cettorre.animalsshelter.application.Controller;
 import com.example.cettorre.animalsshelter.application.dto.AnimalDTO;
-import com.example.cettorre.animalsshelter.persistence.DbHelper;
-import com.example.cettorre.animalsshelter.persistence.DbUtil;
-import com.example.cettorre.animalsshelter.utils.LocationUtility;
-import com.example.cettorre.animalsshelter.utils.Utils;
-
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -45,9 +38,6 @@ public class InsertAnimalActivity extends AppCompatActivity {
     String encodedImage;
 
     public static Controller controller=new Controller();
-    static LocationUtility locationUtility=new LocationUtility();
-    Utils utils=new Utils();
-    static ContentValues cv;
 
 
     @Override
@@ -55,19 +45,17 @@ public class InsertAnimalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         initComponents();
-        locationUtility.connectToGooglePlay(getApplicationContext());
+        controller.connectToGooglePlay(getApplicationContext());
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        locationUtility.createLocationRequest();
-        locationUtility.checkIfGPSisEnabled(InsertAnimalActivity.this);
-        cv = DbUtil.getContentValues();
-
+        controller.createLocationRequest();
+        controller.checkIfGPSisEnabled(InsertAnimalActivity.this);
 
         sendData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     addAniimalToController();
-                    DbUtil.persistCurrentAnimalToDB(getApplicationContext());
+                    controller.persistCurrentAnimalToDB(getApplicationContext());
                 } catch (Exception e) {
                     Toast t = Toast.makeText(InsertAnimalActivity.this, "Please insert correct values into form: "+e.getMessage(), Toast.LENGTH_LONG);
                     t.show();
@@ -81,8 +69,9 @@ public class InsertAnimalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    locationUtility.startLocationUpdates(getApplicationContext());
-                        locationTv.setText("Latitude: "+String.valueOf(locationUtility.mCurLocation.getLatitude())+" Longitude: "+locationUtility.mCurLocation.getLongitude());
+                    controller.startLocationUpdates(getApplicationContext());
+                    locationTv.setText("Latitude: "+String.valueOf(controller.getCurrentLatitude())+
+                                       " Longitude: "+controller.getCurrentLongitude());
                 }catch (NullPointerException e){
                     Toast t= Toast.makeText(InsertAnimalActivity.this,"Wait a second location is not yet ready. Try again",Toast.LENGTH_LONG);
                     t.show();
@@ -94,7 +83,7 @@ public class InsertAnimalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                utils.dispatchTakePictureIntent(takePictureIntent,getPackageManager(),getExternalFilesDir(Environment.DIRECTORY_PICTURES),InsertAnimalActivity.this);
+                controller.getUtils().dispatchTakePictureIntent(takePictureIntent,getPackageManager(),getExternalFilesDir(Environment.DIRECTORY_PICTURES),InsertAnimalActivity.this);
                 startActivityForResult(takePictureIntent, 1);
                 }
         });
@@ -103,13 +92,13 @@ public class InsertAnimalActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        locationUtility.connectGoogleApiClient();//
+        controller.connectGoogleApiClient();//
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        locationUtility.disconnectApiClient();
+        controller.disconnectApiClient();
     }
 
     @Override
@@ -117,22 +106,22 @@ public class InsertAnimalActivity extends AppCompatActivity {
 
         if (reqCode == 1) {
             if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) {
-                locationUtility.mCurLocation = locationUtility.getLocation();
+               controller.setCurrentLocation(controller.getLocation());
 
-                if(locationUtility.mCurLocation!=null)
-                    Log.e("location_from_perm_res",String.valueOf(locationUtility.mCurLocation.getLatitude()));
+                if(controller.getmCurrentLocation()!=null)
+                    Log.e("location_from_perm_res",String.valueOf(controller.getmCurrentLocation().getLatitude()));
 
             }else{
-                locationUtility.requestAccessFineLocationPermission(this);
+                controller.requestAccessFineLocationPermission(this);
 
-                if(locationUtility.mCurLocation!=null)
-                     Log.e("locationPermReq",String.valueOf(locationUtility.mCurLocation.getLatitude()));
+                if(controller.getmCurrentLocation()!=null)
+                     Log.e("locationPermReq",String.valueOf(controller.getmCurrentLocation().getLatitude()));
             }
         }
     }
 
     private void addAniimalToController() throws Exception {
-        if(locationUtility.mCurLocation==null) throw new NullPointerException("Invalid Location, please add animal location");
+        if(controller.getmCurrentLocation()==null) throw new NullPointerException("Invalid Location, please add animal location");
         controller.addAnimal(
                 name.getText().toString(),
                 type.getText().toString(),
@@ -140,8 +129,8 @@ public class InsertAnimalActivity extends AppCompatActivity {
                 hasChip.isChecked(),
                 new Date(),
                 encodedImage,
-                 locationUtility.mCurLocation.getLatitude(),
-                 locationUtility.mCurLocation.getLongitude());
+                 controller.getmCurrentLocation().getLatitude(),
+                 controller.getmCurrentLocation().getLongitude());
         Intent i = new Intent(this,MainActivity.class);
         startActivity(i);
     }
@@ -149,9 +138,9 @@ public class InsertAnimalActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            mImageView.setImageURI(utils.photoUri);
-            encodedImage=  utils.convertToBase64(utils.mCurrentPhotoPath);
-            Log.e("encoded_image1",encodedImage);
+            mImageView.setImageURI(controller.getUtils().photoUri);
+            encodedImage=  controller.getEncodedImage();
+            Log.e("encoded_image",encodedImage);
         }
     }
 
@@ -167,4 +156,6 @@ public class InsertAnimalActivity extends AppCompatActivity {
         startLocation=findViewById(R.id.startLocation);
         locationTv=findViewById(R.id.current_location);
     }
+
+
 }

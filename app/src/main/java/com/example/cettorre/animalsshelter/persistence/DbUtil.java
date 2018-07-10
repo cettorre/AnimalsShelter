@@ -55,13 +55,8 @@ public class DbUtil {
         return mAdapter;
     }
 
-
-    public static ContentValues getContentValues(){
-        cv = new ContentValues(2);
-        return cv;
-    }
-
     public static void persistCurrentAnimalToDB(Context context) {
+        cv = new ContentValues(2);
         AnimalDTO animalDTO= InsertAnimalActivity.controller.getCurrentAnimalDTO();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         cv.put(DbHelper.COL_NAME, animalDTO.getName());
