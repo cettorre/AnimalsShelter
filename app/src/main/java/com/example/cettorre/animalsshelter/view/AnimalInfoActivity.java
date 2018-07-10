@@ -21,6 +21,7 @@ import com.example.cettorre.animalsshelter.utils.Utils;
 public class AnimalInfoActivity extends AppCompatActivity {
 
     Button delBtn;
+    Button showLocation;
     TextView iName;
     TextView iDate;
     TextView iAge;
@@ -105,6 +106,14 @@ public class AnimalInfoActivity extends AppCompatActivity {
             }
         });
 
+        showLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(AnimalInfoActivity.this, MapsActivity.class);
+                startActivity(i);
+            }
+        });
+
     }
 
     private void initComponents() {
@@ -116,7 +125,7 @@ public class AnimalInfoActivity extends AppCompatActivity {
         iType= findViewById(R.id.iType);
         aPhoto=findViewById(R.id.aPhoto);
         delBtn=findViewById(R.id.iDelete);
-
+        showLocation=findViewById(R.id.show_location);
     }
 
 }
