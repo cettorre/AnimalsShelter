@@ -1,6 +1,7 @@
 package com.example.cettorre.animalsshelter.view;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
@@ -19,8 +20,12 @@ import android.widget.Toast;
 import com.example.cettorre.animalsshelter.R;
 import com.example.cettorre.animalsshelter.application.Controller;
 import com.example.cettorre.animalsshelter.application.dto.AnimalDTO;
+import com.example.cettorre.animalsshelter.persistence.DbHelper;
+import com.example.cettorre.animalsshelter.persistence.DbUtil;
 import com.example.cettorre.animalsshelter.utils.LocationUtility;
 import com.example.cettorre.animalsshelter.utils.Utils;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -32,16 +37,18 @@ public class InsertAnimalActivity extends AppCompatActivity {
     EditText type;
     CheckBox hasChip;
     TextView locationTv;
-    int iChip;
-
     Button sendData;
     Button takePhoto;
     Button startLocation;
-
     ImageView mImageView ;
-    Controller controller=new Controller();
+
+    String encodedImage;
+
+    public static Controller controller=new Controller();
     static LocationUtility locationUtility=new LocationUtility();
     Utils utils=new Utils();
+    static ContentValues cv;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +59,15 @@ public class InsertAnimalActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         locationUtility.createLocationRequest();
         locationUtility.checkIfGPSisEnabled(InsertAnimalActivity.this);
+        cv = DbUtil.getContentValues();
+
 
         sendData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     addAniimalToController();
+                    DbUtil.persistCurrentAnimalToDB(getApplicationContext());
                 } catch (Exception e) {
                     Toast t = Toast.makeText(InsertAnimalActivity.this, "Please insert correct values into form: "+e.getMessage(), Toast.LENGTH_LONG);
                     t.show();
@@ -77,7 +87,6 @@ public class InsertAnimalActivity extends AppCompatActivity {
                     Toast t= Toast.makeText(InsertAnimalActivity.this,"Wait a second location is not yet ready. Try again",Toast.LENGTH_LONG);
                     t.show();
                 }
-
             }
         });
 
@@ -95,7 +104,6 @@ public class InsertAnimalActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         locationUtility.connectGoogleApiClient();//
-
     }
 
     @Override
@@ -104,8 +112,6 @@ public class InsertAnimalActivity extends AppCompatActivity {
         locationUtility.disconnectApiClient();
     }
 
-    //TODO test on above api 23
-   // Location locData;//locationUtility.mCurLocation
     @Override
     public void onRequestPermissionsResult(int reqCode, String[] perms, int[] results){
 
@@ -121,46 +127,44 @@ public class InsertAnimalActivity extends AppCompatActivity {
 
                 if(locationUtility.mCurLocation!=null)
                      Log.e("locationPermReq",String.valueOf(locationUtility.mCurLocation.getLatitude()));
-
             }
         }
     }
 
     private void addAniimalToController() throws Exception {
-         controller.addAnimal(
+        if(locationUtility.mCurLocation==null) throw new NullPointerException("Invalid Location, please add animal location");
+        controller.addAnimal(
                 name.getText().toString(),
                 type.getText().toString(),
                 Integer.parseInt(age.getText().toString()),
                 hasChip.isChecked(),
                 new Date(),
-                "photoB64",
+                encodedImage,
                  locationUtility.mCurLocation.getLatitude(),
                  locationUtility.mCurLocation.getLongitude());
+        Intent i = new Intent(this,MainActivity.class);
+        startActivity(i);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
-
             mImageView.setImageURI(utils.photoUri);
-            String encodedImage=  utils.convertToBase64(utils.mCurrentPhotoPath);
+            encodedImage=  utils.convertToBase64(utils.mCurrentPhotoPath);
             Log.e("encoded_image1",encodedImage);
         }
     }
 
-
     private void initComponents() {
         setContentView(R.layout.activity_insert_animal);
-        name = (EditText) findViewById(R.id.name);
-        age = (EditText) findViewById(R.id.age);
-        type = (EditText) findViewById(R.id.type);
+        name = findViewById(R.id.name);
+        age =  findViewById(R.id.age);
+        type = findViewById(R.id.type);
         hasChip=findViewById(R.id.hasChip);
-        sendData=(Button) findViewById(R.id.sendData);
+        sendData=findViewById(R.id.sendData);
         takePhoto=findViewById(R.id.takePhoto);
         mImageView=findViewById(R.id.photo);
         startLocation=findViewById(R.id.startLocation);
         locationTv=findViewById(R.id.current_location);
     }
-
-
 }

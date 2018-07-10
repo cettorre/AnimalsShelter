@@ -135,7 +135,7 @@ public class LocationUtility implements GoogleApiClient.ConnectionCallbacks, Goo
                 (mGoogleApiClient, mLocRequest, this);
 
         //todo check if null and if google play services is connected-> request activate GPS
-
+        if(mCurLocation==null) throw new NullPointerException("Invalid Location, please add animal location");
         mCurLocation=getLocation();
 
 

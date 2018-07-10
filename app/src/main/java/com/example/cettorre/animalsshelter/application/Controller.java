@@ -34,4 +34,9 @@ public class Controller {
         }
         return animalDTOList;
     }
+
+    public AnimalDTO getCurrentAnimalDTO(){
+
+        return getAnimalListDTO().get(animalList.size()-1);
+    }
 }

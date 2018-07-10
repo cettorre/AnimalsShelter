@@ -39,7 +39,7 @@ public class Utils {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                photoUri = FileProvider.getUriForFile(context,//TODO
+                photoUri = FileProvider.getUriForFile(context,
                         "com.example.cettorre.animalsshelter.fileprovider",
                         photoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);

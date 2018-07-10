@@ -25,15 +25,46 @@ public class AnimalDTO {
         this.hasChip=animal.isHasChip();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public boolean isHasChip() {
+        return hasChip;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getPhotoB64() {
+        return photoB64;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
     @Override
     public String toString() {
-        return "AnimalDTO{" +
+        return "\nAnimalDTO{" +
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", age=" + age +
                 ", date=" + date +
-                ", photoB64='" + photoB64 + '\'' +
-                ", latitude=" + latitude +
+                ", \nlatitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';
     }
