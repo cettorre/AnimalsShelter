@@ -1,9 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.AnimalInfoActivity">
+    tools:context="com.example.cettorre.animalsshelter.view.AnimalInfoActivity"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/iName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textColor="#58FAF4"/>
+
+    <TextView
+        android:id="@+id/iAge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textColor="#58FAF4"/>
+
+    <TextView
+        android:id="@+id/iChip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textColor="#58FAF4"/>
+
+    <TextView
+        android:id="@+id/iType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textColor="#58FAF4"/>
+
+    <TextView
+        android:id="@+id/iDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textColor="#58FAF4"/>
+    <Button
+        android:id="@+id/show_location"
+        android:text="show location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        />
+
+    <ImageButton
+        android:id="@+id/aPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:scaleType="fitXY"
+        />
+
+
+    <Button
+        android:id="@+id/iDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DELETE"
+        android:background="@color/colorAccent"
+        android:layout_margin="15dp"
+        />
+</LinearLayout>

@@ -3,10 +3,14 @@ package com.example.cettorre.animalsshelter.persistence;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorWindow;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
+
 import com.example.cettorre.animalsshelter.application.dto.AnimalDTO;
 import com.example.cettorre.animalsshelter.view.InsertAnimalActivity;
+
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,7 +28,11 @@ public class DbUtil {
         return mDb;
     }
 
-    public static Cursor getCursor(Context context){
+    public static Cursor getmCursor() {
+        return mCursor;
+    }
+
+    public static void setCursor(Context context){
 
        SQLiteDatabase sqLiteDatabase=getDbConnection(context);
        String[] columns = new String[]{
@@ -37,7 +45,6 @@ public class DbUtil {
                         null, null, null,
                         null, null, null);
 
-        return mCursor;
     }
 
     public static SimpleCursorAdapter getSimpleCursorAdapter(Context context){
@@ -54,6 +61,18 @@ public class DbUtil {
 
         return mAdapter;
     }
+
+    public static String getStringValueFromDB(String string){
+
+        return mCursor.getString(mCursor.getColumnIndexOrThrow(string));
+    }
+
+    public static int getIntValueFromDB(String string){
+
+        return  mCursor.getInt(mCursor.getColumnIndexOrThrow(string));
+    }
+
+
 
     public static void persistCurrentAnimalToDB(Context context) {
         cv = new ContentValues(2);
@@ -74,4 +93,19 @@ public class DbUtil {
 
         DbUtil.getDbConnection(context).insert(DbHelper.TABLE_NAME, null, cv);
         }
+
+    public static void setDBfield() {
+        Field field = null;
+        try {
+            field = CursorWindow.class.getDeclaredField("sCursorWindowSize");
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        field.setAccessible(true);
+        try {
+            field.set(null, 4096 * 4096);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 }
