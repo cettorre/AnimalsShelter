@@ -4,14 +4,18 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.util.Log;
+import android.view.View;
 
 import com.example.cettorre.animalsshelter.application.dto.AnimalDTO;
 import com.example.cettorre.animalsshelter.domain.Animal;
+import com.example.cettorre.animalsshelter.persistence.DbHelper;
 import com.example.cettorre.animalsshelter.persistence.DbUtil;
 import com.example.cettorre.animalsshelter.utils.LocationUtility;
 import com.example.cettorre.animalsshelter.utils.Utils;
+import com.example.cettorre.animalsshelter.view.AnimalInfoActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,5 +109,56 @@ public class Controller {
 
     public void persistCurrentAnimalToDB(Context context){
         DbUtil.persistCurrentAnimalToDB(context);
+    }
+
+    public void requeryDB() {
+        DbUtil.getmCursor().requery();
+
+    }
+
+    public void prepareCursor(Context context) {
+        DbUtil.setCursor(context);
+
+    }
+    public String getAnimalNameFromDB() {
+        return DbUtil.getStringValueFromDB(DbHelper.COL_NAME);
+
+    }
+
+    public String getAnimalDateFromDB() {
+        return  DbUtil.getStringValueFromDB(DbHelper.COL_DATE);
+    }
+
+    public int getAnimalAgeFromDB() {
+        return DbUtil.getIntValueFromDB(DbHelper.COL_AGE);
+    }
+
+    public String getAnimalChipFromDB() {
+        return  (DbUtil.getIntValueFromDB(DbHelper.COL_CHIP)==1)?"yes":"no";
+    }
+
+    public String getAnimalTypeFromDB() {
+        return DbUtil.getStringValueFromDB(DbHelper.COL_TYPE);
+    }
+
+    public String getAnimalPhotoFromDB() {
+        return DbUtil.getStringValueFromDB(DbHelper.COL_PHOTO);
+    }
+
+    public void moveCursorToPosition(int pos) {
+        DbUtil.getmCursor().moveToPosition(pos);
+    }
+
+    public String getRowIdFromDB() {
+        return DbUtil.getmCursor().getString(0);
+    }
+
+    public SQLiteDatabase getDbConnection(Context context) {
+        return DbUtil.getDbConnection(context);
+    }
+
+    public void deleteRowByIDFromTable(Context context,String rowId) {
+        DbUtil.getDbConnection(context).delete(DbHelper.TABLE_NAME, "_id = ?", new String[]{rowId});
+
     }
 }

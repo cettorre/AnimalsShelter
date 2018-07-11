@@ -37,7 +37,7 @@ public class InsertAnimalActivity extends AppCompatActivity {
 
     String encodedImage;
 
-    public static Controller controller=new Controller();
+    private Controller controller=new Controller();
 
 
     @Override

@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import com.example.cettorre.animalsshelter.R;
+import com.example.cettorre.animalsshelter.application.Controller;
 import com.example.cettorre.animalsshelter.persistence.DbUtil;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     Button mAddAnimal;
     ListView mList;
     static SimpleCursorAdapter mAdapter;
+    private Controller controller=new Controller();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

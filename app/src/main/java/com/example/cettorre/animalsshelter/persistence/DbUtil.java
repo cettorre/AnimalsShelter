@@ -7,6 +7,7 @@ import android.database.CursorWindow;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.SimpleCursorAdapter;
 
+import com.example.cettorre.animalsshelter.application.Controller;
 import com.example.cettorre.animalsshelter.application.dto.AnimalDTO;
 import com.example.cettorre.animalsshelter.view.InsertAnimalActivity;
 
@@ -21,6 +22,7 @@ public class DbUtil {
     static Cursor mCursor;
     private static SimpleCursorAdapter mAdapter;
     private static ContentValues cv;
+    private static Controller controller=new Controller();
 
     public static SQLiteDatabase getDbConnection(Context context){
         mHelper = new DbHelper(context);
@@ -76,7 +78,7 @@ public class DbUtil {
 
     public static void persistCurrentAnimalToDB(Context context) {
         cv = new ContentValues(2);
-        AnimalDTO animalDTO= InsertAnimalActivity.controller.getCurrentAnimalDTO();
+        AnimalDTO animalDTO= controller.getCurrentAnimalDTO();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         cv.put(DbHelper.COL_NAME, animalDTO.getName());
         cv.put(DbHelper.COL_DATE, dateFormat.format(new Date()));
