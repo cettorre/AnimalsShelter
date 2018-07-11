@@ -74,6 +74,11 @@ public class DbUtil {
         return  mCursor.getInt(mCursor.getColumnIndexOrThrow(string));
     }
 
+    public static double getRealValueFromDB(String string){
+
+        return  mCursor.getDouble(mCursor.getColumnIndexOrThrow(string));
+    }
+
 
 
     public static void persistCurrentAnimalToDB(Context context) {

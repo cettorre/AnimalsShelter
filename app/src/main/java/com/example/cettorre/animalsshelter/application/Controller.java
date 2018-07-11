@@ -17,9 +17,15 @@ import com.example.cettorre.animalsshelter.utils.LocationUtility;
 import com.example.cettorre.animalsshelter.utils.Utils;
 import com.example.cettorre.animalsshelter.view.AnimalInfoActivity;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Controller {
      private static List<Animal> animalList=new ArrayList<>();
@@ -125,26 +131,6 @@ public class Controller {
 
     }
 
-    public String getAnimalDateFromDB() {
-        return  DbUtil.getStringValueFromDB(DbHelper.COL_DATE);
-    }
-
-    public int getAnimalAgeFromDB() {
-        return DbUtil.getIntValueFromDB(DbHelper.COL_AGE);
-    }
-
-    public String getAnimalChipFromDB() {
-        return  (DbUtil.getIntValueFromDB(DbHelper.COL_CHIP)==1)?"yes":"no";
-    }
-
-    public String getAnimalTypeFromDB() {
-        return DbUtil.getStringValueFromDB(DbHelper.COL_TYPE);
-    }
-
-    public String getAnimalPhotoFromDB() {
-        return DbUtil.getStringValueFromDB(DbHelper.COL_PHOTO);
-    }
-
     public void moveCursorToPosition(int pos) {
         DbUtil.getmCursor().moveToPosition(pos);
     }
@@ -160,5 +146,56 @@ public class Controller {
     public void deleteRowByIDFromTable(Context context,String rowId) {
         DbUtil.getDbConnection(context).delete(DbHelper.TABLE_NAME, "_id = ?", new String[]{rowId});
 
+    }
+
+    private Date getAnimalDateFromDB() {
+        String string = DbUtil.getStringValueFromDB(DbHelper.COL_DATE);
+        Date date = null;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(string);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return  date;
+    }
+
+    private int getAnimalAgeFromDB() {
+        return DbUtil.getIntValueFromDB(DbHelper.COL_AGE);
+    }
+
+    private boolean getAnimalChipFromDB() {
+        return  (DbUtil.getIntValueFromDB(DbHelper.COL_CHIP)==1)?true:false;
+    }
+
+    private String getAnimalTypeFromDB() {
+        return DbUtil.getStringValueFromDB(DbHelper.COL_TYPE);
+    }
+
+    private String getAnimalPhotoFromDB() {
+        return DbUtil.getStringValueFromDB(DbHelper.COL_PHOTO);
+    }
+
+    private double getAnimalLongitude(){
+        return DbUtil.getRealValueFromDB(DbHelper.COL_LONGITUDE);
+    }
+    private double getAnimalLatitude(){
+        return DbUtil.getRealValueFromDB(DbHelper.COL_LONGITUDE);
+    }
+
+    public AnimalDTO setCurrentAnimalFromDBtoDomain() throws Exception {
+                String name=    getAnimalNameFromDB();
+                String type=getAnimalTypeFromDB();
+                int age=    getAnimalAgeFromDB();
+                boolean chip=    getAnimalChipFromDB();
+                Date date=    getAnimalDateFromDB();
+                String photo=    getAnimalPhotoFromDB();
+                double latitude=    getAnimalLatitude();
+                double longitude= getAnimalLongitude();
+
+    Animal animal=new Animal(name,type, age, chip,date,photo,latitude,longitude);
+    AnimalDTO animalDTO=new AnimalDTO(animal);
+
+        return animalDTO;
     }
 }
