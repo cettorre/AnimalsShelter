@@ -16,14 +16,14 @@ import com.example.cettorre.animalsshelter.utils.Utils;
 
 public class AnimalInfoActivity extends AppCompatActivity {
 
-    Button delBtn;
-    Button showLocation;
-    TextView iName;
-    TextView iDate;
-    TextView iAge;
-    TextView iChip;
-    TextView iType;
-    ImageButton aPhoto;
+    private Button delBtn;
+    private Button showLocation;
+    private TextView iName;
+    private TextView iDate;
+    private TextView iAge;
+    private TextView iChip;
+    private TextView iType;
+    private ImageButton aPhoto;
     private Controller controller=new Controller();
 
     @Override

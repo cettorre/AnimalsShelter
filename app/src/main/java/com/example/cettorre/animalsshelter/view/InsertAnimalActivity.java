@@ -25,18 +25,17 @@ import java.util.List;
 
 public class InsertAnimalActivity extends AppCompatActivity {
 
-    EditText name;
-    EditText age;
-    EditText type;
-    CheckBox hasChip;
-    TextView locationTv;
-    Button sendData;
-    Button takePhoto;
-    Button startLocation;
-    ImageView mImageView ;
+    private EditText name;
+    private EditText age;
+    private EditText type;
+    private CheckBox hasChip;
+    private TextView locationTv;
+    private Button sendData;
+    private Button takePhoto;
+    private Button startLocation;
+    private ImageView mImageView ;
 
-    String encodedImage;
-
+    private String encodedImage;
     private Controller controller=new Controller();
 
 
@@ -49,8 +48,37 @@ public class InsertAnimalActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         controller.createLocationRequest();
         controller.checkIfGPSisEnabled(InsertAnimalActivity.this);
+    }
 
-        sendData.setOnClickListener(new View.OnClickListener() {
+    private View.OnClickListener createTakePhotoOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                controller.getUtils().dispatchTakePictureIntent(takePictureIntent,getPackageManager(),getExternalFilesDir(Environment.DIRECTORY_PICTURES),InsertAnimalActivity.this);
+                startActivityForResult(takePictureIntent, 1);
+            }
+        };
+    }
+
+    private View.OnClickListener createStartLocationOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    controller.startLocationUpdates(getApplicationContext());
+                    locationTv.setText("Latitude: "+String.valueOf(controller.getCurrentLatitude())+
+                            " Longitude: "+controller.getCurrentLongitude());
+                }catch (NullPointerException e){
+                    Toast t= Toast.makeText(InsertAnimalActivity.this,"Wait a second location is not yet ready. Try again",Toast.LENGTH_LONG);
+                    t.show();
+                }
+            }
+        };
+    }
+
+    private View.OnClickListener createSendDataOnClickListener() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -62,31 +90,8 @@ public class InsertAnimalActivity extends AppCompatActivity {
                 }
                 List<AnimalDTO> list= controller.getAnimalListDTO();
                 Log.e("list",list.toString());
-                }
-        });
-
-        startLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    controller.startLocationUpdates(getApplicationContext());
-                    locationTv.setText("Latitude: "+String.valueOf(controller.getCurrentLatitude())+
-                                       " Longitude: "+controller.getCurrentLongitude());
-                }catch (NullPointerException e){
-                    Toast t= Toast.makeText(InsertAnimalActivity.this,"Wait a second location is not yet ready. Try again",Toast.LENGTH_LONG);
-                    t.show();
-                }
             }
-        });
-
-        takePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                controller.getUtils().dispatchTakePictureIntent(takePictureIntent,getPackageManager(),getExternalFilesDir(Environment.DIRECTORY_PICTURES),InsertAnimalActivity.this);
-                startActivityForResult(takePictureIntent, 1);
-                }
-        });
+        };
     }
 
     @Override
@@ -155,6 +160,9 @@ public class InsertAnimalActivity extends AppCompatActivity {
         mImageView=findViewById(R.id.photo);
         startLocation=findViewById(R.id.startLocation);
         locationTv=findViewById(R.id.current_location);
+        sendData.setOnClickListener(createSendDataOnClickListener());
+        startLocation.setOnClickListener(createStartLocationOnClickListener());
+        takePhoto.setOnClickListener(createTakePhotoOnClickListener());
     }
 
 

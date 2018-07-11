@@ -1,13 +1,12 @@
 package com.example.cettorre.animalsshelter.application;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
-import android.view.View;
 
 import com.example.cettorre.animalsshelter.application.dto.AnimalDTO;
 import com.example.cettorre.animalsshelter.domain.Animal;
@@ -15,23 +14,28 @@ import com.example.cettorre.animalsshelter.persistence.DbHelper;
 import com.example.cettorre.animalsshelter.persistence.DbUtil;
 import com.example.cettorre.animalsshelter.utils.LocationUtility;
 import com.example.cettorre.animalsshelter.utils.Utils;
-import com.example.cettorre.animalsshelter.view.AnimalInfoActivity;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class Controller {
      private static List<Animal> animalList=new ArrayList<>();
      public static LocationUtility locationUtility=new LocationUtility();
      public Utils utils=new Utils();
+     public static String row;
+     public static int pos;
 
+
+    public static String getRow() {
+        return row;
+    }
+
+    public static void setRow(String row) {
+        Controller.row = row;
+    }
 
     public void addAnimal(
          String name,
@@ -172,7 +176,7 @@ public class Controller {
         return DbUtil.getStringValueFromDB(DbHelper.COL_TYPE);
     }
 
-    private String getAnimalPhotoFromDB() {
+    public String getAnimalPhotoFromDB() {
         return DbUtil.getStringValueFromDB(DbHelper.COL_PHOTO);
     }
 
@@ -197,5 +201,21 @@ public class Controller {
     AnimalDTO animalDTO=new AnimalDTO(animal);
 
         return animalDTO;
+    }
+
+    public void setCursor(Context context) {
+        DbUtil.setCursor(context);
+    }
+
+    public void serDBfieldSize() {
+        DbUtil.setDBfieldSize();
+    }
+
+    public SimpleCursorAdapter getSimpleCursorAdaper(Context context) {
+        return    DbUtil.getSimpleCursorAdapter(context);
+    }
+
+    public Cursor getmCursor() {
+        return DbUtil.getmCursor();
     }
 }

@@ -15,58 +15,67 @@ import com.example.cettorre.animalsshelter.persistence.DbUtil;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button mAddAnimal;
-    ListView mList;
-    static SimpleCursorAdapter mAdapter;
+    private Button mAddAnimal;
+    private ListView mList;
+    private static SimpleCursorAdapter mAdapter;
     private Controller controller=new Controller();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         initComponents();
-        mAddAnimal.setOnClickListener(new View.OnClickListener() {
+
+    }
+
+    private View.OnClickListener createmAddAnimalOnClickListener() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, InsertAnimalActivity.class);
                 startActivity(i);
             }
-        });
+        };
+    }
 
-        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private AdapterView.OnItemClickListener createmListOnItemClickListener() {
+        return new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(MainActivity.this, AnimalInfoActivity.class);
                 i.putExtra("position", position);
+                controller.moveCursorToPosition(position);
+                //   Controller.setRow(controller.getRowIdFromDB());
+                Controller.row=controller.getRowIdFromDB();
+                Controller.pos=position;
                 startActivity(i);
             }
-        });
+        };
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        DbUtil.setCursor(this);
-        DbUtil.setDBfield();
-
-        mAdapter = DbUtil.getSimpleCursorAdapter(this);
+        controller.setCursor(this);
+        controller.serDBfieldSize();
+        mAdapter=controller.getSimpleCursorAdaper(this);
         mList.setAdapter(mAdapter);
         //Refresh the list
-        DbUtil.getmCursor().requery();
-        DbUtil.getSimpleCursorAdapter(this).notifyDataSetChanged();
+        controller.requeryDB();
+        controller.getSimpleCursorAdaper(this).notifyDataSetChanged();
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //Close all connections
-        DbUtil.getDbConnection(this).close();
-        DbUtil.getmCursor().close();
+        controller.getDbConnection(this).close();
+        controller.getmCursor().close();
     }
 
     public void initComponents(){
-        mAddAnimal= (Button) findViewById(R.id.addAnimal);
-        mList = (ListView) findViewById(R.id.list);
+        setContentView(R.layout.activity_main);
+        mAddAnimal= findViewById(R.id.addAnimal);
+        mList =     findViewById(R.id.list);
+        mAddAnimal.setOnClickListener(createmAddAnimalOnClickListener());
+        mList.setOnItemClickListener(createmListOnItemClickListener());
     }
 }

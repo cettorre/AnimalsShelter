@@ -101,7 +101,7 @@ public class DbUtil {
         DbUtil.getDbConnection(context).insert(DbHelper.TABLE_NAME, null, cv);
         }
 
-    public static void setDBfield() {
+    public static void setDBfieldSize() {
         Field field = null;
         try {
             field = CursorWindow.class.getDeclaredField("sCursorWindowSize");
