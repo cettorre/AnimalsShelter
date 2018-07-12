@@ -112,15 +112,8 @@ public class InsertAnimalActivity extends AppCompatActivity {
         if (reqCode == 1) {
             if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) {
                controller.setCurrentLocation(controller.getLocation());
-
-                if(controller.getmCurrentLocation()!=null)
-                    Log.e("location_from_perm_res",String.valueOf(controller.getmCurrentLocation().getLatitude()));
-
             }else{
                 controller.requestAccessFineLocationPermission(this);
-
-                if(controller.getmCurrentLocation()!=null)
-                     Log.e("locationPermReq",String.valueOf(controller.getmCurrentLocation().getLatitude()));
             }
         }
     }

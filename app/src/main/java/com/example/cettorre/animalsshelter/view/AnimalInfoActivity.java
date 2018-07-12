@@ -34,7 +34,7 @@ public class AnimalInfoActivity extends AppCompatActivity {
 
         AnimalDTO animalDTO=null;
         try {
-            animalDTO=controller.setCurrentAnimalFromDBtoDomain();
+            animalDTO=controller.getAnimalDTOfromDB();
         } catch (Exception e) {
             Toast t = Toast.makeText(this,"Error while reading from Database",Toast.LENGTH_LONG);
             t.show();
@@ -81,7 +81,6 @@ public class AnimalInfoActivity extends AppCompatActivity {
 
                 Intent i2 = new Intent(AnimalInfoActivity.this, MainActivity.class);
                 startActivity(i2);
-
             }
         };
     }

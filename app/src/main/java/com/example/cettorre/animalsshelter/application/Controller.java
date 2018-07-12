@@ -7,14 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
-
 import com.example.cettorre.animalsshelter.application.dto.AnimalDTO;
 import com.example.cettorre.animalsshelter.domain.Animal;
 import com.example.cettorre.animalsshelter.persistence.DbHelper;
 import com.example.cettorre.animalsshelter.persistence.DbUtil;
 import com.example.cettorre.animalsshelter.utils.LocationUtility;
 import com.example.cettorre.animalsshelter.utils.Utils;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,43 +61,34 @@ public class Controller {
     public AnimalDTO getCurrentAnimalDTO(){
         return getAnimalListDTO().get(animalList.size()-1);
     }
-
+    //----------------------------------------------------------------------Utils
     public Utils getUtils() {
         return utils;
     }
-
     public String getEncodedImage(){
         return utils.getEncodedImage();
     }
 
+    //----------------------------------------------------------------------Location
     public void connectToGooglePlay(Context context){
         locationUtility.connectToGooglePlay(context);
     }
-
     public void createLocationRequest(){
         locationUtility.createLocationRequest();
     }
-
     public void checkIfGPSisEnabled(Activity activity){
-        locationUtility.checkIfGPSisEnabled(activity);
-    }
-
+        locationUtility.checkIfGPSisEnabled(activity); }
     public void startLocationUpdates(Context context){
-        locationUtility.startLocationUpdates(context);
-    }
-
+        locationUtility.startLocationUpdates(context);}
     public double getCurrentLatitude(){
         return locationUtility.getLocation().getLatitude();
     }
-
     public double getCurrentLongitude(){
         return locationUtility.getLocation().getLongitude();
     }
-
     public void connectGoogleApiClient(){
         locationUtility.connectGoogleApiClient();
     }
-
     public void disconnectApiClient(){
         locationUtility.disconnectApiClient();
     }
@@ -110,29 +99,41 @@ public class Controller {
         return locationUtility.getLocation();
     }
     public void requestAccessFineLocationPermission(Activity activity){
-        locationUtility.requestAccessFineLocationPermission(activity);
-    }
-
+        locationUtility.requestAccessFineLocationPermission(activity); }
     public void setCurrentLocation(Location location){
         locationUtility.setmCurLocation(location);
     }
 
-    public void persistCurrentAnimalToDB(Context context){
-        DbUtil.persistCurrentAnimalToDB(context);
+
+    //----------------------------------------------------------------------Persistence
+    public AnimalDTO getAnimalDTOfromDB() throws Exception {
+        String name=    getAnimalNameFromDB();
+        String type=getAnimalTypeFromDB();
+        int age=    getAnimalAgeFromDB();
+        boolean chip=    getAnimalChipFromDB();
+        Date date=    getAnimalDateFromDB();
+        String photo=    getAnimalPhotoFromDB();
+        double latitude=    getAnimalLatitude();
+        double longitude= getAnimalLongitude();
+
+        Animal animal=new Animal(name,type, age, chip,date,photo,latitude,longitude);
+        AnimalDTO animalDTO=new AnimalDTO(animal);
+
+        return animalDTO;
+    }
+
+    //------cursor
+
+    public void prepareCursor(Context context) {
+        DbUtil.setCursor(context);
+    }
+
+    public Cursor getmCursor() {
+        return DbUtil.getmCursor();
     }
 
     public void requeryDB() {
         DbUtil.getmCursor().requery();
-
-    }
-
-    public void prepareCursor(Context context) {
-        DbUtil.setCursor(context);
-
-    }
-    public String getAnimalNameFromDB() {
-        return DbUtil.getStringValueFromDB(DbHelper.COL_NAME);
-
     }
 
     public void moveCursorToPosition(int pos) {
@@ -143,13 +144,26 @@ public class Controller {
         return DbUtil.getmCursor().getString(0);
     }
 
+    public void setCursor(Context context) {
+        DbUtil.setCursor(context);
+    }
+
+    //------DB
+
+    public void persistCurrentAnimalToDB(Context context){
+        DbUtil.persistCurrentAnimalToDB(context);
+    }
+
+    public String getAnimalNameFromDB() {
+        return DbUtil.getStringValueFromDB(DbHelper.COL_NAME);
+    }
+
     public SQLiteDatabase getDbConnection(Context context) {
         return DbUtil.getDbConnection(context);
     }
 
     public void deleteRowByIDFromTable(Context context,String rowId) {
         DbUtil.getDbConnection(context).delete(DbHelper.TABLE_NAME, "_id = ?", new String[]{rowId});
-
     }
 
     private Date getAnimalDateFromDB() {
@@ -157,7 +171,6 @@ public class Controller {
         Date date = null;
         try {
             date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(string);
-
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -176,46 +189,23 @@ public class Controller {
         return DbUtil.getStringValueFromDB(DbHelper.COL_TYPE);
     }
 
+    public double getAnimalLatitude(){
+        return DbUtil.getRealValueFromDB(DbHelper.COL_LATITUDE);
+    }
+
+    public double getAnimalLongitude(){
+        return DbUtil.getRealValueFromDB(DbHelper.COL_LONGITUDE);
+    }
+
     public String getAnimalPhotoFromDB() {
         return DbUtil.getStringValueFromDB(DbHelper.COL_PHOTO);
     }
 
-    private double getAnimalLongitude(){
-        return DbUtil.getRealValueFromDB(DbHelper.COL_LONGITUDE);
-    }
-    private double getAnimalLatitude(){
-        return DbUtil.getRealValueFromDB(DbHelper.COL_LONGITUDE);
-    }
-
-    public AnimalDTO setCurrentAnimalFromDBtoDomain() throws Exception {
-                String name=    getAnimalNameFromDB();
-                String type=getAnimalTypeFromDB();
-                int age=    getAnimalAgeFromDB();
-                boolean chip=    getAnimalChipFromDB();
-                Date date=    getAnimalDateFromDB();
-                String photo=    getAnimalPhotoFromDB();
-                double latitude=    getAnimalLatitude();
-                double longitude= getAnimalLongitude();
-
-    Animal animal=new Animal(name,type, age, chip,date,photo,latitude,longitude);
-    AnimalDTO animalDTO=new AnimalDTO(animal);
-
-        return animalDTO;
-    }
-
-    public void setCursor(Context context) {
-        DbUtil.setCursor(context);
-    }
-
-    public void serDBfieldSize() {
-        DbUtil.setDBfieldSize();
-    }
-
     public SimpleCursorAdapter getSimpleCursorAdaper(Context context) {
-        return    DbUtil.getSimpleCursorAdapter(context);
+        return DbUtil.getSimpleCursorAdapter(context);
     }
 
-    public Cursor getmCursor() {
-        return DbUtil.getmCursor();
+    public void setDBfieldSize() {
+        DbUtil.setDBfieldSize();
     }
 }

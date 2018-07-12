@@ -2,8 +2,11 @@ package com.example.cettorre.animalsshelter.view;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.cettorre.animalsshelter.R;
+import com.example.cettorre.animalsshelter.application.Controller;
+import com.example.cettorre.animalsshelter.application.dto.AnimalDTO;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,6 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    Controller controller= new Controller();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +43,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        controller.moveCursorToPosition(Controller.pos);
 
-        // Add a marker in Sydney and move the camera
-        LatLng latlng = new LatLng(41.38, 2.16);//TODO getAnimalLocation from DB
-        mMap.addMarker(new MarkerOptions().position(latlng).title("Marker in Sydney"));
+        AnimalDTO animalDTO=null;
+        try {
+             animalDTO=controller.getAnimalDTOfromDB();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        LatLng latlng = new LatLng(animalDTO.getLatitude(), animalDTO.getLongitude());//TODO getAnimalLocation from DB
+
+        mMap.addMarker(new MarkerOptions().position(latlng).title("Animal location"));
         CameraUpdate center=CameraUpdateFactory.newLatLng(latlng);
         CameraUpdate zoom=CameraUpdateFactory.zoomTo(13);
 
