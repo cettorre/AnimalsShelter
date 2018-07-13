@@ -119,16 +119,17 @@ public class InsertAnimalActivity extends AppCompatActivity {
     }
 
     private void addAniimalToController() throws Exception {
+        String animalName=name.getText().toString();
+        String animalType=type.getText().toString();
+        int animalAge=Integer.parseInt(age.getText().toString());
+        boolean animalHasChip=hasChip.isChecked();
+        Date animalDate=new Date();
+        double animalLatitude=controller.getmCurrentLocation().getLatitude();
+        double animalLongitude=controller.getmCurrentLocation().getLongitude();
         if(controller.getmCurrentLocation()==null) throw new NullPointerException("Invalid Location, please add animal location");
-        controller.addAnimal(
-                name.getText().toString(),
-                type.getText().toString(),
-                Integer.parseInt(age.getText().toString()),
-                hasChip.isChecked(),
-                new Date(),
-                encodedImage,
-                 controller.getmCurrentLocation().getLatitude(),
-                 controller.getmCurrentLocation().getLongitude());
+
+        controller.addAnimal(animalName, animalType, animalAge, animalHasChip,animalDate,encodedImage,animalLatitude,animalLongitude);
+
         Intent i = new Intent(this,MainActivity.class);
         startActivity(i);
     }

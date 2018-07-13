@@ -62,7 +62,7 @@ public class AnimalInfoActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(AnimalInfoActivity.this, MapsActivity.class);
+                Intent i = new Intent(AnimalInfoActivity.this, AnimalMapLocationActivity.class);
                 startActivity(i);
             }
         };
